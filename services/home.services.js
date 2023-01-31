@@ -63,14 +63,14 @@ function homeData(req, res) {
                     const date = new Date();
                     date.setDate(date.getDate() - index);
                   
-                    return date.toLocaleDateString();
+                    return date.toLocaleDateString("vi-VN", {day: "2-digit", month: "2-digit", year: "numeric"});
                   });
                 const past7DaysNew = [...Array(7).keys()].map(index => {
                 let date = new Date();
                 date.setDate(date.getDate() - index);
                 
-                date  = date.toLocaleDateString().split("/");
-                return `${date[2]}-${date[1]}-${date[0]}`
+                date  = date.toLocaleDateString("vi-VN", {day: "2-digit", month: "2-digit", year: "numeric"})
+                return date
                 });
                 let sql =
                 `
