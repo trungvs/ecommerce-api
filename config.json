@@ -1,0 +1,6 @@
+﻿{
+    "secret": "57c78d80-bde9-4cdb-b207-f735fd479e7c",
+    "adminID": "1553709c-0f06-4be3-8c7c-d730b357cb10",
+    "DATABASE_URL": "mysql://4jw56bcmeuwlmciyk2lc:pscale_pw_gBnT77axIIbqkvDbtpRi0nWRfgc0of7hKW48DI6l7MQ@ap-northeast.connect.psdb.cloud/ecom?ssl={'rejectUnauthorized':true}"
+
+}
