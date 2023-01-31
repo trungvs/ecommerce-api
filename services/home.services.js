@@ -69,8 +69,8 @@ function homeData(req, res) {
                 let date = new Date();
                 date.setDate(date.getDate() - index);
                 
-                date  = date.toLocaleDateString("vi-VN", {day: "2-digit", month: "2-digit", year: "numeric"})
-                return date
+                date  = date.toLocaleDateString("vi-VN", {day: "2-digit", month: "2-digit", year: "numeric"}).split("/");
+                return `${date[2]}-${date[1]}-${date[0]}`
                 });
                 let sql =
                 `
