@@ -11,7 +11,7 @@ function getAllOrder(req, res) {
     const orderID = req.body.orderID
     const phone = req.body.phone
     const status = req.body.status
-    let today = new Date().toLocaleDateString().split("/")
+    let today = new Date().toLocaleDateString("vi-VN", {day: "2-digit", month: "2-digit", year: "numeric"}).split("/")
     today = `${today[2]}-${today[1]}-${today[0]}`
 
     if (list === 1) {
