@@ -65,7 +65,7 @@ function addOrder(req, res) {
                             message: "Có sản phẩm đã hết hàng, vui lòng kiểm tra lại giỏ hàng"
                         })
                     } else {
-//                         MYSQL_DB.connect(err => {
+                        // MYSQL_DB.connect(err => {
                             let sql =
                             `
                             INSERT INTO orders(id, user_id, fullname, phone, email, address, totalItem, totalPrice, listItems, status_order, status_payment, payment, note)
@@ -102,7 +102,7 @@ function addOrder(req, res) {
                                     })
                                 }
                             })
-//                         })
+                        // })
                     }
                 }
             })

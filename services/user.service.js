@@ -2,6 +2,8 @@
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require("uuid")
 const { MYSQL_DB } = require('../mysql/mysql')
+const jwtDecode = require('jwt-decode')
+
 
 module.exports = {
     authenticate,
@@ -29,7 +31,8 @@ function checktoken(req, res) {
         } else {
             res.send({
                 code: 200,
-                message: "Valid Token"
+                message: "Valid Token",
+                role: jwtDecode(req.body.access_token).role === "admin" ? "admin" : "user"
             })
         }
     })
@@ -41,7 +44,11 @@ async function authenticate({ username, password }, res) {
         MYSQL_DB.query(sql, (err, results) => {
             const user = results.find(u => u.username === username && u.password === password)
             if (user) {
-                const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '1d' });
+                // if (user.username === "admin") {
+                    // const token = jwt.sign({ sub: user.id, role: "admin" }, config.secret, { expiresIn: '1d' });
+                // } else {
+                    const token = jwt.sign({ sub: user.id, role: user.username === "admin" ? "admin" : "user" }, config.secret, { expiresIn: '1d' });
+                // }
                 res.send({
                     code: 200,
                     data: {

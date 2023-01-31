@@ -84,6 +84,7 @@ function homeData(req, res) {
                 (SELECT COUNT(*) FROM orders WHERE created_at LIKE "%${past7DaysNew[0]}%") AS "${past7Days[0]}"
                 `
                 MYSQL_DB.query(sql, (err, ordersDetail) => {
+                    console.log(sql)
                     if (err) {
                         res.send({
                             code: 400,
