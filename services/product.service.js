@@ -251,80 +251,88 @@ function createGroup(req, res) {
     const listGroup = req.body.listGroup || []
     const sub_category = req.body.subCategory
 
-    // MYSQL_DB.connect(err => {
         MYSQL_DB.query(`INSERT INTO related_products(id, subcategory) VALUES ("${id}", "${sub_category}")`, (err, results) => {
-            console.log(err)
+            if (err) {
+                res.send({
+                    code: 201,
+                    message: "Thao tác thất bại"
+                })
+            } else {    
+                let sql = `
+                    UPDATE product
+                    SET related_products = "${id}"
+                    WHERE id IN (${MYSQL_DB.escape(listGroup)})
+                `
+                MYSQL_DB.query(sql, (err, resutls) => {
+                    if (err) {
+                        res.send({
+                            code: 201,
+                            message: "Thao tác thất bại"
+                        })
+                    } else {
+                        res.send({
+                            code: 200,
+                            message: "Thao tác thành công"
+                        })
+                    }
+                })
+            }
         })
-        listGroup.map(item => {
-            let sql = `
-                UPDATE product
-                SET related_products = "${id}"
-                WHERE id = "${item}"
-            `
-            MYSQL_DB.query(sql, (err, results) => {
-                
-            })
-        })
-        res.send({
-            code: 200,
-            message: "Thao tác thành công",
-        })
-    // })
 }
 
 function deleteGroup(req, res) {
     const listID = req.body.listID
     const listRelated = req.body.listRelated
 
-    // MYSQL_DB.connect(err => {
-        listID.map(item => {
-            let sql = `
-            UPDATE product
-            SET related_products = ${null}
-            WHERE id = "${item}"
-            `
-            MYSQL_DB.query(sql, (err, results) => {
-                if (!err) {
-                    
-                }
-                listRelated.map(i => {
-                    let sql = `
-                    SELECT * FROM product WHERE related_products = "${i}"
-                    `
-                    console.log(i)
-                    MYSQL_DB.query(sql, (err, results) => {
-                        console.log("results", results)
-                        if (results.length === 0) {
-                            let sql = `DELETE FROM related_products WHERE id = "${i}"`
-                            console.log(sql)
-                            MYSQL_DB.query(sql, (err, results) => {
-                            })
-                        } 
-                    })
-                })
-            })
-        })
-        res.send({
-            code: 200,
-            message: "Thao tác thành công",
-        })
-    // })
-    
-    const listError = (err) => {
-        console.log(err)
-        // const checkError = Object.values(err).filter(e => e !== null)
+    let sql = `
+    UPDATE product
+    SET related_products = ${null}
+    WHERE id IN (${MYSQL_DB.escape(listID)})
+    `
+    MYSQL_DB.query(sql, (err, results) => {
         if (err) {
-            res.send({
-                code: 200,
-                message: "Thao tác thành công",
-            })
-        } else {
             res.send({
                 code: 201,
                 message: "Thao tác thất bại"
             })
+        } else {
+            let sql = `
+                SELECT * FROM product WHERE related_products IN (${MYSQL_DB.escape(listRelated)})
+            `
+            MYSQL_DB.query(sql, (err, results) => {
+                if (err) {
+                    res.send({
+                        code: 201,
+                        message: "Thao tác thất bại"
+                    })
+                } else {
+                    if (results.length === 0) {
+                        let sql = `
+                            DELETE FROM related_products WHERE id IN (${MYSQL_DB.escape(listRelated)})
+                        `
+                        MYSQL_DB.query(sql, (err, results) => {
+                            if (err) {
+                                res.send({
+                                    code: 201,
+                                    message: "Thao tác thất bại"
+                                })
+                            } else {
+                                res.send({
+                                    code: 200,
+                                    message: "Thao tác thành công"
+                                })
+                            }
+                        })
+                    } else {
+                        res.send({
+                            code: 200,
+                            message: "Thao tác thành công"
+                        })
+                    }
+                }
+            })
         }
-    }
+    })
 }
 
 function searchProductFromCateOrSub(req, res) {
